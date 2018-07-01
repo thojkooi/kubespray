@@ -32,3 +32,6 @@ dependencies:
 
   - role: network_plugin/cloud
     when: kube_network_plugin == 'cloud'
+
+  - role: network_plugin/kube-router
+    when: kube_network_plugin == 'kube-router'

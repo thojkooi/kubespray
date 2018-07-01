@@ -1,0 +1,24 @@
+---
+- name: template kuberouter conflist
+  template:
+    src: 10-kuberouter.conflist.j2
+    dest: /etc/cni/net.d/10-kuberouter.conf
+    owner: kube
+
+- name: Kube-router | Copy cni plugins from hyperkube
+  command: "{{ docker_bin_dir }}/docker run --rm -v /opt/cni/bin:/cnibindir {{ hyperkube_image_repo }}:{{ hyperkube_image_tag }} /bin/cp -r /opt/cni/bin/. /cnibindir/"
+  register: cni_task_result
+  until: cni_task_result.rc == 0
+  retries: 4
+  delay: "{{ retry_stagger | random + 3 }}"
+  changed_when: false
+  tags:
+    - hyperkube
+    - upgrade
+
+- name: Kube-router | Create kube-router manifest
+  template:
+    src: kuberouter.yml.j2
+    dest: "{{ kube_config_dir }}/kube-router.yml"
+    mode: 0640
+  register: kuberouter_manifest

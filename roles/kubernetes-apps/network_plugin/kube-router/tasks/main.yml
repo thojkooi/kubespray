@@ -1,0 +1,10 @@
+---
+- name: Kuberouter | Start Resources
+  kube:
+    name: "kube-router"
+    kubectl: "{{ bin_dir }}/kubectl"
+    filename: "{{ kube_config_dir }}/kube-router.yml"
+    resource: "ds"
+    namespace: "kube-system"
+    state: "latest"
+  when: inventory_hostname == groups['kube-master'][0]

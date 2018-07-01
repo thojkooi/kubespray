@@ -86,7 +86,7 @@
     - "/etc/cni/net.d"
     - "/opt/cni/bin"
   when:
-    - kube_network_plugin in ["calico", "weave", "canal", "flannel", "contiv", "cilium"]
+    - kube_network_plugin in ["calico", "weave", "canal", "flannel", "contiv", "cilium", "kube-router"]
     - inventory_hostname in groups['k8s-cluster']
   tags:
     - network
@@ -96,6 +96,7 @@
     - canal
     - contiv
     - bootstrap-os
+    - kube-router
 
 - name: Create local volume provisioner directories
   file:
